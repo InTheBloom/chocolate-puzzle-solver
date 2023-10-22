@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>チョコレートパズルソルバー</title>
+
+        <style>
+            .br {}
+            .br::after {
+                content: "\A";
+                white-space: pre;
+            }
+        </style>
+<script>
+    document.addEventListener("DOMContentLoaded", setButton);
+    function setButton () {
+        const button = document.getElementById("run");
+        button.addEventListener("click", makeGrid);
+    }
+
+    function makeGrid () {
+        /* Validation */
+        const Input = ParseInput();
+        if (!Input.reduce((x, y) => x && y, true)) {
+            alert("Invalid Input");
+            return;
+        }
+
+        /* Generate grid style */
+        const H = Input[0], W = Input[1];
+        let GridStyle = generateGridStyle(H, W);
+
+        /* Apply style */
+        const field = document.getElementById("field");
+        field.style = GridStyle;
+
+        /* Add divs in grid */
+        field.innerHTML = "";
+        for (let i = 0; i < H*W; i++) {
+            field.innerHTML += `<div>item ${i}</div>`;
+        }
+    }
+
+    function generateGridStyle (H, W) {
+        res = `width: ${70*W}px; height: ${70*H}px; background: green; display: grid;`;
+        res += "grid-template-rows:";
+        for (let i = 0; i < H; i++) res += " 1fr" + (i == H-1 ? ";" : "");
+        res += "grid-template-columns:";
+        for (let i = 0; i < W; i++) res += " 1fr" + (i == W-1 ? ";" : "");
+
+        return res;
+    }
+
+    function ParseInput () {
+        const HeightForm = document.getElementById("HeightForm");
+        const WidthForm = document.getElementById("WidthForm");
+        let H = Number.parseInt(HeightForm.value);
+        let W = Number.parseInt(WidthForm.value);
+        return [H, W];
+    }
+</script>
+    </head>
+    <body>
+        <h1>チョコレートパズルソルバー version1</h1>
+        <div style="padding: 1em; background: whitesmoke; margin: 1em;">
+            <p>例のチョコレートパズルの解を探索するプログラムです。</p>
+            <p>使い方</p>
+            <ul>
+                <li>縦幅と横幅を入力</li>
+                <li>ブロックの形を指定</li>
+                <li>runボタンを押す</li>
+            </ul>
+            <p>エラー表示が出たら入力がおかしい可能性があります。一向に終わる気配がない時は、盤面が大きすぎるかもしれません。</p>
+        </div>
+
+        <label for="getHeight">縦の幅を入力してください (1-20)</label>
+        <input type="number" name="getHeight" id="HeightForm" min="1" max="20" value="1">
+        <span class="br"></span>
+        <label for="getWidth">横の幅を入力してください (1-20)</label>
+        <input type="number" name="getWidth" id="WidthForm" min="1" max="20" value="1">
+        <span class="br"></span>
+        <input type="button" id="run" value="Run">
+
+        <div style="padding: 2em;">
+            <div id="field" style=""></div>
+        </div>
+    </body>
+</html>
