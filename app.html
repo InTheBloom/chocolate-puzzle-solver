@@ -12,23 +12,52 @@
                 white-space: pre;
             }
         </style>
+        <style id="ids">
+        </style>
 <script>
+    /**
+     * setButton 
+     * |- generateBlockDefinitionForm
+     * |- runApplication
+     *    |- parseInt
+     *    |- makeGrid
+     *       |- generateGridStyle
+     *
+     */
+
     document.addEventListener("DOMContentLoaded", setButton);
     function setButton () {
+        const BlockDefinitionDiv = document.getElementById("BlockDefinitionDiv");
+        generateBlockDefinitionForm(BlockDefinitionDiv);
+        const comfirmButton = document.getElementById("comfirmBlockDefiniton");
+
         const button = document.getElementById("run");
-        button.addEventListener("click", makeGrid);
+        button.addEventListener("click", runApplication);
     }
 
-    function makeGrid () {
+    function generateBlockDefinitionForm (BlockDefinitionDiv) {
+        const size = 5;
+    }
+
+    function runApplication () {
         /* Validation */
         const Input = ParseInput();
         if (!Input.reduce((x, y) => x && y, true)) {
+            /* alert(未定) */
             alert("Invalid Input");
             return;
         }
 
-        /* Generate grid style */
         const H = Input[0], W = Input[1];
+        /* 解の探索 */
+
+        /* グリッドに可視化 */
+        const idName = "grid";
+        makeGrid(H, W, idName);
+    }
+
+    function makeGrid (H, W, idName) {
+        /* Generate grid style */
         let GridStyle = generateGridStyle(H, W);
 
         /* Apply style */
@@ -36,9 +65,12 @@
         field.style = GridStyle;
 
         /* Add divs in grid */
+        const ids = document.getElementById("ids");
+        ids.innerHTML = "";
         field.innerHTML = "";
         for (let i = 0; i < H*W; i++) {
-            field.innerHTML += `<div>item ${i}</div>`;
+            ids.innerHTML += `#${idName}${i}{}\n`;
+            field.innerHTML += `<div id="${idName}${i}">item ${i}</div>`;
         }
     }
 
@@ -72,6 +104,18 @@
                 <li>runボタンを押す</li>
             </ul>
             <p>エラー表示が出たら入力がおかしい可能性があります。一向に終わる気配がない時は、盤面が大きすぎるかもしれません。</p>
+        </div>
+
+        <h2>ブロックを定義</h2>
+        <p>マスを選択して、使える個数を指定して、決定ボタンを押してください。(5x5まで)</p>
+        <div style="margin-bottom: 1em;">
+            <div id="BlockDefinitionDiv">
+            </div>
+            <label for="UpperLimit">このブロックを何個まで使えるかを入力してください。</label>
+            <span class="br"></span>
+            <input type="number" name="UpperLimit" id="UpperLimitForm" min="1" value="1">
+            <input type="button" id="comfirmBlockDefiniton" value="comfirm">
+            <span class="br"></span>
         </div>
 
         <label for="getHeight">縦の幅を入力してください (1-20)</label>
